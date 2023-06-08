@@ -1,13 +1,13 @@
 class Job {
     private role: string;
-    private salary: number;
-    get getSalary(): number {
-        return this.salary;
+    private _salary: number;
+    get salary(): number {
+        return this._salary;
     };
 
   constructor(role: string, salary: number) {
     this.role = role;
-    this.salary = salary;
+    this._salary = salary;
   };
   
   public work(personName: string): void {
@@ -20,23 +20,22 @@ const employee1 = new Job('грузчик', 35_000);
 employee1.work('Иван Семенов');
 
 class Person {
-  private Job: string;
+  private job: Job;
   private name: string;
-  private salary: number;
-  set setJob(Job: string) {
-    this.Job = Job;
+  set setJob(job: Job) {
+    this.job = job;
   }
   getSalary(): number {
-    return this.salary;
+    return this.job.salary;
   };
-  constructor(name: string, Job: string, salary: number) {
+  constructor(name: string, job: Job) {
     this.name = name;
-    this.Job = Job;
-    this.salary = salary;
+    this.job = job;
   };
-  public work(name: string): void {
-    console.log(`${this.name} сейчас работает как ${this.Job}, з/п = ${this.salary}руб.`);
+  getToWork():void {
+    this.job.work('name');
   }
 }
 
-const person1 = new Person('Алесей Жуков', 'водитель', 45_000);
+const person1 = new Person('Алесей Жуков', employee1);
+person1.getToWork();
