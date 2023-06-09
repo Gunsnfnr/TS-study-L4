@@ -4,9 +4,6 @@ class Job {
     get salary(): number {
         return this._salary;
     };
-    set setSalary(_salary: number) {
-      this._salary = _salary;
-    }
 
   constructor(role: string, salary: number) {
     this.role = role;
