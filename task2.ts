@@ -13,30 +13,20 @@ class Product {
   set setPrice(price: number) {
     this._price = price;
   }  
-
   constructor(productName: string, price: number) {
     this._productName = productName;
     this._price = price;
   };
-  getInfo():void {
-    console.log(`Товар: ${this._productName}, цена: ${this._price} руб.`);
-  }
 }
 
-const soap = new Product('Детское мыло', 30);
-soap.getInfo();
-const toothpaste = new Product('Зубная паста "Лесной бальзам"', 60);
-toothpaste.getInfo();
-
-
-class AbstractSelling {
+abstract class AbstractSelling {
   _product: Product;
   _quantity: number;
 
   get product(): Product {
     return this._product;
   };
-  set setProduct(product: Product) {
+  set product(product: Product) {
     this._product = product;
   }
 
@@ -52,37 +42,35 @@ class AbstractSelling {
     this._quantity = quantity;
   };
 
-  getPrice(): void {
-    const calcSum = this._quantity * this._product._price
-    console.log(`Покупается ${this._product._productName}, ${this._quantity} шт., сумма покупки = ${calcSum} руб.`);
-  };
+  abstract getPrice():void;
 
-  compare(prod: Product): void {
-    console.log(`Текущая цена на ${this._product._productName} = ${this._product._price} руб`);
-    console.log(`Цена на ${prod.productName} = ${prod.price} руб`);
-  };
-
-}
-
-const buy1 = new AbstractSelling(soap, 4);
-
-buy1.getPrice();
-buy1.compare(toothpaste)
+  compare(a: Product, b:Product) {};
+} 
 
 class discountSelling extends AbstractSelling {
   getPrice(): void {
-    const calcSum = this._quantity * this._product._price * 0.9;
-    console.log(`Покупка со скидкой ${this._product._productName}, ${this._quantity} шт., сумма покупки = ${calcSum} руб.`);
+    let discountMultiplier: number = 0.9;
+    const calcSum: number = this._quantity * this._product._price * discountMultiplier;
+    console.log(`Покупка со скидкой ${this._product._productName},
+    ${this._quantity} шт., сумма покупки = ${calcSum} руб.`);
   };
+  compare = (a: Product, b:Product) => (a._price < b._price) ? 1 : -1;
 }
 
-const buy2 = new discountSelling(soap, 4);
-buy2.getPrice();
-
 class complexDiscountSelling extends AbstractSelling {
-  getComplexDiscount(quantityForDisc: number): void {
+  _quantityForDisc: number;
+
+  constructor(product: Product, quantity: number, quantityForDisc: number) {
+    super(product, quantityForDisc);
+    this._product = product;
+    this._quantity = quantity;
+    this._quantityForDisc = quantityForDisc;
+  };
+
+  getPrice(): void {
     let discountMultiplier: number = 1;
-    if (quantityForDisc && this._quantity >= quantityForDisc) {
+
+    if (this._quantity >= this._quantityForDisc) {
       discountMultiplier = 0.9;
     }
     const calcSum: number = this._quantity * this._product._price * discountMultiplier;
@@ -90,3 +78,49 @@ class complexDiscountSelling extends AbstractSelling {
     ${this._quantity} шт., сумма покупки = ${calcSum} руб.`);
   };
 }
+const goodsArray: Product[] = [];
+const good1: Product = new Product('Мыло', 30);
+goodsArray.push(good1);
+const good2: Product = new Product('Зубная паста', 60);
+goodsArray.push(good2);
+const good3: Product = new Product('Полотенце', 200);
+goodsArray.push(good3);
+const good4: Product = new Product('Зубная нить', 150);
+goodsArray.push(good4);
+const good5: Product = new Product('Шампунь', 100);
+goodsArray.push(good5);
+const good6: Product = new Product('Ватные палочки', 120);
+goodsArray.push(good6);
+const good7: Product = new Product('Лак для волос', 140);
+goodsArray.push(good7);
+const good8: Product = new Product('Салфетки', 40);
+goodsArray.push(good8);
+
+const purchase1:discountSelling = new discountSelling(good1, 4);
+purchase1.getPrice();
+
+const purchase2:discountSelling = new discountSelling(good2, 1);
+purchase2.getPrice();
+
+const purchase3:discountSelling = new discountSelling(good3, 3);
+purchase3.getPrice();
+
+const purchase4:discountSelling = new discountSelling(good4, 7);
+purchase4.getPrice();
+
+const purchase5:complexDiscountSelling = new complexDiscountSelling(good5, 4, 4);
+purchase5.getPrice();
+
+const purchase6:complexDiscountSelling = new complexDiscountSelling(good6, 2, 4);
+purchase5.getPrice();
+
+const purchase7:complexDiscountSelling = new complexDiscountSelling(good7, 4, 2);
+purchase5.getPrice();
+
+const purchase8:complexDiscountSelling = new complexDiscountSelling(good8, 5, 4);
+purchase5.getPrice();
+
+
+console.log('goodsArray: ', goodsArray);
+const goodsArraySorted = goodsArray.sort(purchase1.compare);
+console.log('goodsArraySorted: ', goodsArraySorted);
