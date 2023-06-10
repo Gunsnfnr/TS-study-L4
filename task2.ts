@@ -1,16 +1,16 @@
 class Product {
-  _productName: string;
-  _price: number;
+  private _productName: string;
+  private _price: number;
   get productName(): string {
       return this._productName;
   };
   get price(): number {
       return this._price;
   };
-  set setName(name: string) {
+  set productName(name: string) {
     this._productName = name;
   }
-  set setPrice(price: number) {
+  set price(price: number) {
     this._price = price;
   }  
   constructor(productName: string, price: number) {
@@ -20,8 +20,8 @@ class Product {
 }
 
 abstract class AbstractSelling {
-  _product: Product;
-  _quantity: number;
+  private _product: Product;
+  private _quantity: number;
 
   get product(): Product {
     return this._product;
@@ -33,7 +33,7 @@ abstract class AbstractSelling {
   get quantity(): number {
       return this._quantity;
   };
-  set setQuantity(quantity: number) {
+  set quantity(quantity: number) {
     this._quantity = quantity;
   }
 
@@ -50,11 +50,11 @@ abstract class AbstractSelling {
 class discountSelling extends AbstractSelling {
   getPrice(): void {
     let discountMultiplier: number = 0.9;
-    const calcSum: number = this._quantity * this._product._price * discountMultiplier;
-    console.log(`Покупка со скидкой ${this._product._productName},
-    ${this._quantity} шт., сумма покупки = ${calcSum} руб.`);
+    const calcSum: number = this.quantity * this.product.price * discountMultiplier;
+    console.log(`Покупка со скидкой ${this.product.productName},
+    ${this.quantity} шт., сумма покупки = ${calcSum} руб.`);
   };
-  compare = (a: Product, b:Product) => (a._price < b._price) ? 1 : -1;
+  compare = (a: Product, b:Product) => (a.price < b.price) ? 1 : -1;
 }
 
 class complexDiscountSelling extends AbstractSelling {
@@ -62,20 +62,20 @@ class complexDiscountSelling extends AbstractSelling {
 
   constructor(product: Product, quantity: number, quantityForDisc: number) {
     super(product, quantityForDisc);
-    this._product = product;
-    this._quantity = quantity;
+    this.product = product;
+    this.quantity = quantity;
     this._quantityForDisc = quantityForDisc;
   };
 
   getPrice(): void {
     let discountMultiplier: number = 1;
 
-    if (this._quantity >= this._quantityForDisc) {
+    if (this.quantity >= this._quantityForDisc) {
       discountMultiplier = 0.9;
     }
-    const calcSum: number = this._quantity * this._product._price * discountMultiplier;
-    console.log(`Покупка со скидкой ${this._product._productName},
-    ${this._quantity} шт., сумма покупки = ${calcSum} руб.`);
+    const calcSum: number = this.quantity * this.product.price * discountMultiplier;
+    console.log(`Покупка со скидкой ${this.product.productName},
+    ${this.quantity} шт., сумма покупки = ${calcSum} руб.`);
   };
 }
 const goodsArray: Product[] = [];
